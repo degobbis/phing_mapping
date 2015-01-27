@@ -20,7 +20,7 @@
 		<!--
 			<delete file="${target}" />
 		-->
-		<exec command='mklink /D "${target}" "${source}"' dir="${project.basedir}" />
+		<exec command="ln -s ${source} ${target}" dir="${project.basedir}" />
 	</target>
 
 
@@ -65,8 +65,8 @@
 	<target name="map">
 		<echo msg="#------------------ mapplugin ------------------#" />
 	<!--
-			<phingcall target="jtcsv2html" />
-			<phingcall target="jtanimsition" />
-	-->
+            <phingcall target="jtcsv2html" />
+            <phingcall target="jtanimsition" />
+    -->
 	</target>
 </project>
