@@ -16,11 +16,13 @@
 	<target name="symboliclink">
 		<echo msg="TARGET: ${target}"/>
 		<echo msg="SOURCE: ${source}"/>
+		<echo msg="project.basedir: ${project.basedir}"/>
 
 		<!--
 			<delete file="${target}" />
 		-->
-		<exec command='mklink /D "${target}" "${source}"' dir="${project.basedir}" />
+		<exec command='rmdir "${target}"' dir="${project.basedir}" />
+		<exec command='mklink /d "${target}" "${source}"' dir="${project.basedir}" />
 	</target>
 
 
