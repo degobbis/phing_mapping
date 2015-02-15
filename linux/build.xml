@@ -14,12 +14,13 @@
 		create a symbolic link, delete the old one before creating the new one
 	 -->
 	<target name="symboliclink">
+		<echo msg="PROJECT: ${project.basedir}"/>
 		<echo msg="TARGET: ${target}"/>
 		<echo msg="SOURCE: ${source}"/>
 
 		<delete file="${target}" />
 
-		<exec command="ln -s ${source} ${target}" dir="${project.basedir}" />
+		<exec command="${project.basedir}/symsync -s ${source} ${target}" dir="/" />
 	</target>
 
 
@@ -56,8 +57,12 @@
 
 	<target name="jtanimsition">
 		<phingcall target="symboliclink">
-			<property name="source" value="${packagedir}/${jtanimsition_git}" />
-			<property name="target" value="${targetdir}/plugins/system/${jtanimsition_joomla}" />
+			<property name="source" value="${packagedir}/${jtanimsition_git}/" />
+			<property name="target" value="${targetdir}/plugins/system/${jtanimsition_joomla}/" />
+		</phingcall>
+		<phingcall target="symboliclink">
+			<property name="source" value="${packagedir}/${jtanimsition_git}/media/" />
+			<property name="target" value="${targetdir}/media/jtlibraries/" />
 		</phingcall>
 	</target>
 
