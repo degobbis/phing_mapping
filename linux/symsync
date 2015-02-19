@@ -1,0 +1,121 @@
+#!/bin/bash
+#####################################
+#       Written by Iain Bucław      #
+#    Modified by Guido De Gobbis    #
+#         added .ignorelist         #
+# Under the GPLv3 Software Licensed #
+#####################################
+
+### Start ###
+ignore()
+{
+    string="$@"
+
+    for item in ${IGNORELIST} ;
+    do
+        if [[ $found -eq 0 ]]; then
+            if [ -z "${string##*$item*}" ] ;
+                then export found=1
+                else export found=0
+            fi
+        fi
+    done
+}
+
+start-sync()
+{
+    echo "Starting Sync..."
+    if [ -d "$1" ]
+        then sync-dirs "$1" "$dest"
+	    sync-syms "$1" "$dest"
+    fi
+}
+
+sync-dirs()
+{
+    make-dir()
+    {
+	while [ $# -gt "0" ]
+	do export dir=$(echo "${1##"$srcs"}")
+        found=0
+        ignore "$dir"
+
+        if [ $found -eq 0 ];
+            then mkdir -p "$dest""$dir"
+        fi
+
+        shift
+
+	done
+    }
+    
+    srcs=$1
+    dest=$2
+
+    echo "Syncing Source Directories With Destination Folder..."
+    srcs_dirs=$(find $srcs -type d)
+    make-dir $srcs_dirs
+}
+
+sync-syms()
+{
+    sym-files()
+    {
+	while [ $# -gt "0" ]
+	do export file=$(echo "${1##"$srcs"}")
+        found=0
+        ignore "$file"
+
+        if [ $found -eq 0 ];
+        then
+           if [ $softsym -eq 1 ]
+               then ln -s "$1" "$dest""$file"
+               else cp "$1" "$dest""$file"
+           fi
+        fi
+
+        shift
+
+    done
+    }
+    
+    srcs=$1
+    dest=$2
+
+    echo "Syncing Source Files With Destination Folder..."
+    srcs_files=$(find $srcs -type f)
+    sym-files $srcs_files
+}
+
+### Main Logic ###
+BASE=$(dirname $(readlink -f $0))
+
+if [ "$1" == "--soft" ] || [ "$1" == "-s" ]
+then export softsym=1
+     shift
+else export softsym=0
+fi
+
+if [ ! "${1%%/*}" ]
+then export srcs="$1"
+else export srcs="$PWD"/"$1"
+fi; shift
+if [ ! "$1%%/*}" ]
+then export dest="$1"
+else export dest="$PWD"/"$1"
+fi
+
+if [ -f ${BASE}/.symsyncingnore ];
+    then IGNORELIST="$(cat ${BASE}/.symsyncingnore)"
+        echo "found IGNORELIST..."
+    else IGNORELIST=""
+        echo "not found IGNORELIST..."
+fi
+
+
+start-sync $srcs
+
+echo "Finished!"
+echo "Exiting..."
+exit 0
+### End ###
