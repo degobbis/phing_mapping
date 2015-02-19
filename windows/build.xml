@@ -5,9 +5,9 @@
 	<property name="packagedir" value="${package.root}" />
 	<property name="targetdir" value="${joomla.root}" />
 	<property name="com_name" value="nnproducts" />
-	<property name="jtcsv2html_git" value="pkg_jtcsv2html" />
+	<property name="jtcsv2html_git" value="Niels/pkg_jtcsv2html" />
 	<property name="jtcsv2html_joomla" value="jtcsv2html" />
-	<property name="jtanimsition_git" value="plg_system_jtanimsition" />
+	<property name="jtanimsition_git" value="Niels/plg_system_jtanimsition" />
 	<property name="jtanimsition_joomla" value="jtanimsition" />
 
 	<!--
@@ -22,7 +22,7 @@
 			<delete file="${target}" />
 		-->
 		<exec command='rmdir "${target}"' dir="${project.basedir}" />
-		<exec command='mklink /d "${target}" "${source}"' dir="${project.basedir}" />
+		<exec command='mklink /J "${target}" "${source}"' dir="${project.basedir}" />
 	</target>
 
 
