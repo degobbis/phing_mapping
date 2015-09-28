@@ -1,14 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="map_into_target" default="map">
+<project name="Map Joomla!-Extensions into Target" default="Init">
 
 	<property file="build.properties"  override="true" />
+	<property name="jstaging" value="${jstaging.root}" />
+	<property name="jstable" value="${jstable.root}" />
 	<property name="packagedir" value="${package.root}" />
-	<property name="targetdir" value="${joomla.root}" />
 	<property name="com_name" value="nnproducts" />
 	<property name="jtcsv2html_git" value="Niels/pkg_jtcsv2html" />
 	<property name="jtcsv2html_joomla" value="jtcsv2html" />
-	<property name="jtanimsition_git" value="Niels/plg_system_jtanimsition" />
+	<property name="jtanimsition_git" value="JoomTools/develop/plg_system_jtanimsition" />
 	<property name="jtanimsition_joomla" value="jtanimsition" />
+
+	<target name="Init">
+		<echo msg="#------------------ Joomla-Core und JoomTools Extensions einrichten ------------------#" />
+		<echo msg="" />
+
+		<input message="Was soll kopiert werden?"
+		       propertyName="exec"
+		       validArgs="all,joomla,extensions,jtanimsition">
+		</input>
+		<phingcall target="debug">
+			<property name="debug.key" value="Init.exec" />
+			<property name="debug.value" value="${exec}" />
+		</phingcall>
+
+		<!--
+			<phingcall target="${exec}" />
+		-->
+
+		<!--
+			<phingcall target="${testinput}"/>
+				<phingcall target="jtcsv2html" />
+				<phingcall target="jtanimsition" />
+		-->
+	</target>
+
+	<!--
+		Copy Joomla! Core
+	-->
+	<target name="copyjoomla" depends="Init">
+		<echo msg="Kopiere Joomladateien von:"/>
+		<echo msg="project.basedir: ${project.basedir}"/>
+		<echo msg="Ziehlverzeichnis: ${targetdir}"/>
+		<copy todir="${targetdir}">
+			<fileset dir="${joomla.source}">
+				<include name="*.php" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/administrator">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/cache">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/cli">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/components">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/images">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/includes">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/language">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/layouts">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/libraries">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/logs">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/media">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/modules">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/plugins">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/templates">
+				<include name="**" />
+			</fileset>
+
+			<fileset dir="${joomla.source}/tmp">
+				<include name="**" />
+			</fileset>
+		</copy>
+	</target>
 
 	<!--
 		create a symbolic link, delete the old one before creating the new one
@@ -62,13 +161,40 @@
 			<property name="source" value="${packagedir}/${jtanimsition_git}" />
 			<property name="target" value="${targetdir}/plugins/system/${jtanimsition_joomla}" />
 		</phingcall>
+
+		<phingcall target="symboliclink">
+			<property name="source" value="${packagedir}/${jtanimsition_git}/media" />
+			<property name="target" value="${targetdir}/media/jtlibraries" />
+		</phingcall>
 	</target>
 
-	<target name="map">
+	<target name="All Extensions">
 		<echo msg="#------------------ mapplugin ------------------#" />
 	<!--
 			<phingcall target="jtcsv2html" />
 			<phingcall target="jtanimsition" />
 	-->
+	</target>
+
+	<target name="gettarget">
+		<echo msg="#------------------ mapplugin ------------------#" />
+
+		<input message="Ziel eingeben:"
+		       propertyName="ziel"
+		       validArgs="stable,staging">
+		</input>
+		<echo msg="Die Eingabe war: ${ziel}"/>
+		<property name="targetdir" value="${j${ziel}}" />
+		<echo msg="targetdir = ${targetdir}"/>
+
+		<!--
+			<phingcall target="${testinput}"/>
+				<phingcall target="jtcsv2html" />
+				<phingcall target="jtanimsition" />
+		-->
+	</target>
+
+	<target name="debug">
+		<echo msg="Ausgabewert für ${debug.key} => ${debug.value}" />
 	</target>
 </project>
