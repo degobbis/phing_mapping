@@ -1,76 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="map_into_target" default="map">
 
-	<property file="build.properties"  override="true" />
-	<property name="packagedir" value="${package.root}" />
-	<property name="targetdir" value="${joomla.root}" />
-	<property name="com_name" value="nnproducts" />
-	<property name="jtcsv2html_git" value="pkg_jtcsv2html" />
-	<property name="jtcsv2html_joomla" value="jtcsv2html" />
-	<property name="jtanimsition_git" value="plg_system_jtanimsition" />
-	<property name="jtanimsition_joomla" value="jtanimsition" />
+    <property file="build.properties" override="true"/>
+    <property name="packagedir" value="${package.root}"/>
+    <property name="targetdir" value="${joomla.dev}"/>
+    <property name="com_name" value="nnproducts"/>
+    <property name="libjt_lib" value="JoomTools/develop/lib_joomtools"/>
+    <property name="libjt_media" value="JoomTools/develop/lib_joomtools"/>
+    <property name="jtcsv2html_plg_content" value="JoomTools/develop/plg_content_jtcsv2html"/>
+    <property name="jtcsv2html_plg_search" value="JoomTools/develop/plg_search_jtcsv2htm"/>
+    <property name="jtanimsition_plg_system" value="JoomTools/develop/plg_system_jtanimsition"/>
+    <property name="jtanimsition_media" value="JoomTools/develop/plg_system_jtanimsition"/>
 
-	<!--
-		create a symbolic link, delete the old one before creating the new one
-	 -->
-	<target name="symboliclink">
-		<echo msg="PROJECT: ${project.basedir}"/>
-		<echo msg="TARGET: ${target}"/>
-		<echo msg="SOURCE: ${source}"/>
+    <!--
+        create a symbolic link, delete the old one before creating the new one
+     -->
+    <target name="symboliclink">
+        <echo msg="PROJECT: ${project.basedir}"/>
+        <echo msg="TARGET: ${target}"/>
+        <echo msg="SOURCE: ${source}"/>
 
-		<delete file="${target}" />
+        <exec command="${project.basedir}/symsync -s ${source} ${target}" dir="/"/>
+    </target>
 
-		<exec command="${project.basedir}/symsync -s ${source} ${target}" dir="/" />
-	</target>
+    <target name="joomla-cms">
+        <property name="source" value="${packagedir}/JoomTools/develop/joomla-cms"/>
+        <property name="target" value="${targetdir}"/>
+        <echo msg="TARGET: ${target}"/>
+        <echo msg="SOURCE: ${source}"/>
 
+        <exec command="cp -R ${source}/* ${target}/" dir="/"/>
 
-	<target name="mapcomponent">
-		<phingcall target="symboliclink">
-			<property name="source" value="${packagedir}/com_${com_name}/admin" />
-			<property name="target" value="${targetdir}/administrator/components/com_${com_name}" />
-		</phingcall>
+        <delete dir="${target}/tests/" includeemptydirs="true" verbose="false" failonerror="false"/>
+        <delete dir="${target}/build/" includeemptydirs="true" verbose="false" failonerror="false"/>
+        <!--<delete dir="${target}/installation/" includeemptydirs="true" verbose="false" failonerror="false" />-->
+        <delete>
+            <fileset dir="${target}">
+                <include name="*.md"/>
+                <include name="*.txt"/>
+                <include name="*.dist"/>
+                <include name="*.xml"/>
+                <include name="composer.*"/>
+            </fileset>
+        </delete>
 
-		<phingcall target="symboliclink">
-			<property name="source" value="${packagedir}/com_${com_name}/site" />
-			<property name="target" value="${targetdir}/components/com_${com_name}" />
-		</phingcall>
-
-		<phingcall target="symboliclink">
-			<property name="source" value="${packagedir}/com_${com_name}/${com_name}.xml" />
-			<property name="target" value="${targetdir}/administrator/components/com_${com_name}/${com_name}.xml" />
-		</phingcall>
-	</target>
-
-
-	<target name="jtcsv2html">
-		<phingcall target="symboliclink">
-			<property name="source" value="${packagedir}/${jtcsv2html_git}/content" />
-			<property name="target" value="${targetdir}/plugins/content/${jtcsv2html_joomla}" />
-		</phingcall>
-
-		<phingcall target="symboliclink">
-			<property name="source" value="${packagedir}/${jtcsv2html_git}/search" />
-			<property name="target" value="${targetdir}/plugins/search/${jtcsv2html_joomla}" />
-		</phingcall>
-	</target>
+    </target>
 
 
-	<target name="jtanimsition">
-		<phingcall target="symboliclink">
-			<property name="source" value="${packagedir}/${jtanimsition_git}/" />
-			<property name="target" value="${targetdir}/plugins/system/${jtanimsition_joomla}/" />
-		</phingcall>
-		<phingcall target="symboliclink">
-			<property name="source" value="${packagedir}/${jtanimsition_git}/media/" />
-			<property name="target" value="${targetdir}/media/jtlibraries/" />
-		</phingcall>
-	</target>
+    <target name="mapcomponent">
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/com_${com_name}/admin"/>
+            <property name="target" value="${targetdir}/administrator/components/com_${com_name}"/>
+        </phingcall>
 
-	<target name="map">
-		<echo msg="#------------------ mapplugin ------------------#" />
-	<!--
-            <phingcall target="jtcsv2html" />
-            <phingcall target="jtanimsition" />
-    -->
-	</target>
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/com_${com_name}/site"/>
+            <property name="target" value="${targetdir}/components/com_${com_name}"/>
+        </phingcall>
+
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/com_${com_name}/${com_name}.xml"/>
+            <property name="target" value="${targetdir}/administrator/components/com_${com_name}/${com_name}.xml"/>
+        </phingcall>
+    </target>
+
+
+    <target name="libjt">
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/${libjt_lib}"/>
+            <property name="target" value="${targetdir}/libraries/libjt"/>
+        </phingcall>
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/${libjt_lib}/media"/>
+            <property name="target" value="${targetdir}/media/libjt"/>
+        </phingcall>
+    </target>
+
+    <target name="jtcsv2html">
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/${jtcsv2html_plg_content}"/>
+            <property name="target" value="${targetdir}/plugins/content/jtcsv2html"/>
+        </phingcall>
+
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/${jtcsv2html_plg_search}"/>
+            <property name="target" value="${targetdir}/plugins/search/jtcsv2html"/>
+        </phingcall>
+    </target>
+
+    <target name="jtanimsition">
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/${jtanimsition_plg_system}"/>
+            <property name="target" value="${targetdir}/plugins/system/jtanimsition"/>
+        </phingcall>
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/${jtanimsition_media}/media"/>
+            <property name="target" value="${targetdir}/media/jtlibraries"/>
+        </phingcall>
+    </target>
+
+    <target name="map">
+        <echo msg="#------------------ mapplugin ------------------#"/>
+        <!--
+                <phingcall target="jtcsv2html" />
+                <phingcall target="jtanimsition" />
+        -->
+    </target>
 </project>
