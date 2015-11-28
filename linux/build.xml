@@ -11,6 +11,9 @@
     <property name="jtcsv2html_plg_search" value="JoomTools/develop/plg_search_jtcsv2htm"/>
     <property name="jtanimsition_plg_system" value="JoomTools/develop/plg_system_jtanimsition"/>
     <property name="jtanimsition_media" value="JoomTools/develop/plg_system_jtanimsition"/>
+    <property name="jtlaw" value="JoomTools/develop/plg_content_jtlaw"/>
+    <property name="jtgaoo" value="JoomTools/develop/plg_content_jtgaoo"/>
+    <property name="jtcookieinfo" value="JoomTools/develop/plg_system_jtcookieinfo"/>
 
     <!--
         create a symbolic link, delete the old one before creating the new one
@@ -33,7 +36,7 @@
 
         <delete dir="${target}/tests/" includeemptydirs="true" verbose="false" failonerror="false"/>
         <delete dir="${target}/build/" includeemptydirs="true" verbose="false" failonerror="false"/>
-        <!--<delete dir="${target}/installation/" includeemptydirs="true" verbose="false" failonerror="false" />-->
+        <delete dir="${target}/installation/" includeemptydirs="true" verbose="false" failonerror="false" />
         <delete>
             <fileset dir="${target}">
                 <include name="*.md"/>
@@ -43,7 +46,6 @@
                 <include name="composer.*"/>
             </fileset>
         </delete>
-
     </target>
 
 
@@ -96,6 +98,27 @@
         <phingcall target="symboliclink">
             <property name="source" value="${packagedir}/${jtanimsition_media}/media"/>
             <property name="target" value="${targetdir}/media/jtlibraries"/>
+        </phingcall>
+    </target>
+
+    <target name="jtlaw">
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/${jtlaw}"/>
+            <property name="target" value="${targetdir}/plugins/content/jtlaw"/>
+        </phingcall>
+    </target>
+
+    <target name="jtgaoo">
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/${jtgaoo}"/>
+            <property name="target" value="${targetdir}/plugins/content/jtgaoo"/>
+        </phingcall>
+    </target>
+
+    <target name="jtcookieinfo">
+        <phingcall target="symboliclink">
+            <property name="source" value="${packagedir}/${jtcookieinfo}"/>
+            <property name="target" value="${targetdir}/plugins/system/jtcookieinfo"/>
         </phingcall>
     </target>
 
